@@ -1,0 +1,28 @@
+{
+  "name": "soup-js",
+  "version": "1.0.0",
+  "description": "open source call flooder using Twilio API.",
+  "main": "flood.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node flood"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/liushengxian/soup-js.git"
+  },
+  "keywords": [
+    "TDoS",
+    "nodejs",
+    "twilio"
+  ],
+  "author": "liushengxian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liushengxian/soup-js/issues"
+  },
+  "homepage": "https://github.com/liushengxian/soup-js#readme",
+  "dependencies": {
+    "twilio": "^3.4.0"
+  }
+}

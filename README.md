@@ -26,8 +26,7 @@ This type of attack is reffered to as a TDoS or Telephony Denial of Service atta
 
 ## Authors
 
-* **Misanya Liu** - *NodeJs Version* - [Misanya]
-(https://github.com/liushengxian)
+* **Misanya Liu** - *NodeJs Version* - [Misanya](https://github.com/liushengxian)
 
 
 * **Justin Faler** - *Initial work* - [Jfaler](https://github.com/Jfaler)

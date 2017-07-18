@@ -12,34 +12,35 @@ let numbers = ['+10000000000','+10000000000','+10000000000','+10000000000'];//Co
 let toNumber = '+86**********';
 let count = 1;
 
+const calltimeout = 3000;// call time out = 3s.
+
 const appName ='===SOUP===';
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-const callPhone = (fromNumber)=>{
+let index = 0;
+const callPhone = ()=>{
     client.calls.create({
         url: "http://demo.twilio.com/docs/voice.xml",// add your own TwiML file path here.
         to: toNumber,
-        from: fromNumber
+        from: numbers[index++]
     }, function(err, call) {
         if(call){
             console.log(call.sid);
         }
         console.log(err);
     });
+
+    if(index >= numbers.length){
+        index = 0;
+    }
 }
 
 const launchCall = ()=>{
-    console.log('Trying Count: '+ count);
-
-    for(let ix = 0;ix < numbers.length;ix++){
-        setTimeout(callPhone,1000*ix,numbers[ix]);
-    }
-
-    setTimeout(launchCall,1000*numbers.length);
-    count++;
+    callPhone();
+    setInterval(callPhone,calltimeout);
 };
 
 // Entrance of Main

@@ -20,6 +20,8 @@ This type of attack is reffered to as a TDoS or Telephony Denial of Service atta
 
 * `$ git clone https://github.com/liushengxian/soup-js`
 
+* `$ npm install`
+
 ## Usage
 
 * edit the configurations in flood.js, then launch 'npm run start'.

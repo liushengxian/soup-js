@@ -1,6 +1,6 @@
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/Jfaler/soup/blob/master/LICENSE.txt)
 
-# Soup-Js
+# TDoS Call Flooder : Soup-Js
 * Open source call flooder using Twilio API, inspired by [Soup](https://github.com/Jfaler/soup).
 * Inspiration from [Liu Shengxian]https://github.com/liushengxian/soup-js
 * Inspiration from Project Mayhem

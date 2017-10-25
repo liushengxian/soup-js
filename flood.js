@@ -7,12 +7,12 @@ Ethan Wessel continuing for own personal project
 
 let accountSid = process.env.TWILIO_ACCOUNT_SID; //Config Here
 let authToken = process.env.TWILIO_AUTH_TOKEN; //Config Here
-let numbers = process.env.TWILIO_NUMBERS; //Config Here
+let twilioNumbers = process.env.TWILIO_NUMBERS; //Config Here
 let twimlUrl = process.env.TWILIO_TWIML; //Config Here
 let client = require('twilio')(accountSid, authToken);
 let readline = require('readline');
 
-let numbers = [numbers];
+let numbers = [twilioNumbers];
 let toNumber = '+86**********';
 let count = 1;
 
@@ -57,7 +57,7 @@ rl.question('Enter the target number to start flood(+1 MUST BE IN FRONT!):',(ans
 
     rl.close();
 
-    launchCall();
-    //callPhone();
+    //launchCall();
+    callPhone();
 });
   

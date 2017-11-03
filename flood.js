@@ -34,6 +34,7 @@ const callPhone = ()=>{
     }, function(err, call) {
         if(call){
             console.log("SID: " + call.sid);
+	    console.log("Calling " + toNumber + " from " + numbers[index]);
         } else{
             console.log("ERROR: " + err);
 	}

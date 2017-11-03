@@ -12,7 +12,7 @@ let twimlUrl = process.env.TWILIO_TWIML; //Config Here
 let client = require('twilio')(accountSid, authToken);
 let readline = require('readline');
 
-let numbers = [twilioNumbers];
+let numbers = twilioNumbers.split(",");
 let toNumber = '+86**********';
 let count = 1;
 
@@ -57,7 +57,7 @@ rl.question('Enter the target number to start flood(+1 MUST BE IN FRONT!):',(ans
 
     rl.close();
 
-    //launchCall();
-    callPhone();
+    launchCall();
+    //callPhone();
 });
   

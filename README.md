@@ -17,8 +17,8 @@ This type of attack is reffered to as a TDoS or Telephony Denial of Service atta
 `
 ## Prerequisites
 
+* Read Legality https://www.twilio.com/legal/aup
 * Sign up https://www.twilio.com/try-twilio
-
 * Install Nodejs.
 
 ## Installation

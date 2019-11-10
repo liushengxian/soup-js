@@ -5,6 +5,7 @@ Ethan Wessel continuing for own personal project
 10/24/2017
 */
 
+require('dotenv').config()
 let accountSid = process.env.TWILIO_ACCOUNT_SID; //Config Here
 let authToken = process.env.TWILIO_AUTH_TOKEN; //Config Here
 let twilioNumbers = process.env.TWILIO_NUMBERS; //Config Here
@@ -58,7 +59,7 @@ rl.question('Enter the target number to start flood(+1 MUST BE IN FRONT!):',(ans
 
     rl.close();
 
-    launchCall();
-    //callPhone();
+    //launchCall();
+    callPhone();
 });
   

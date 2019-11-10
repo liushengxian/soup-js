@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/liushengxian/soup-js#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "twilio": "^3.4.0"
   }
 }

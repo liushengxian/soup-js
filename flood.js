@@ -19,6 +19,7 @@ program
     .requiredOption('-n, --numbers <items>', 'numbers to use', commaSeparatedList)
     .option('-i, --instances <string>', 'number of instances', 'unlimited')
     .option('-d, --delay <string>', 'delay between calls/messages in seconds', '10')
+    .option('-m, --message <string>', 'message to send for sms', 'testing')
     .parse()
 const options = program.opts()
 console.log(options)
@@ -28,28 +29,28 @@ if (options.action !== 'call' && options.action !== 'sms') {
     process.exit(0)
 }
 
-let maxCallCount = options.instances !== 'unlimited' ? parseInt(options.instances) : 'unlimited'
-let accountSid = process.env.TWILIO_ACCOUNT_SID; //Config Here
-let authToken = process.env.TWILIO_AUTH_TOKEN; //Config Here
-let twimlUrl = process.env.TWILIO_TWIML; //Config Here
-let client = require('twilio')(accountSid, authToken);
+let MAX_INSTANCE_COUNT = options.instances !== 'unlimited' ? parseInt(options.instances) : 'unlimited'
+let ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID; //Config Here
+let AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN; //Config Here
+let TWIML_URL = process.env.TWILIO_TWIML; //Config Here
+let MSG_SERVICE_SID = process.env.MSG_SID; //Config Here
+let numbers = options.numbers;
+const delay = parseInt(options.delay);
+
+let client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
+
+let instanceCount = 0;
+let index = 0;
 
 if (options.action === 'call') {
-    let numbers = options.numbers;
-
-    const calltimeout = 3000;// call time out = 3s.
-
-    let callCount = 0;
-    let index = 0;
     const callPhone = () => {
-        if (typeof (maxCallCount) === 'number' && callCount >= maxCallCount) {
-            console.log(`Terminating, max call count reached: ${maxCallCount}`)
+        if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
+            console.log(`Terminating, max call count reached: ${MAX_INSTANCE_COUNT}`)
             process.exit(0)
         }
-        callCount += 1
-
+        instanceCount += 1
         client.calls.create({
-            url: twimlUrl,
+            url: TWIML_URL,
             to: options.target,
             from: numbers[index++],
             record: true
@@ -68,10 +69,34 @@ if (options.action === 'call') {
 
     const launchCall = () => {
         callPhone();
-        setInterval(callPhone, calltimeout);
+        setInterval(callPhone, delay);
     };
-
     launchCall()
 } else {
-
+    const smsPhone = () => {
+        if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
+            console.log(`Terminating, max message count reached: ${MAX_INSTANCE_COUNT}`)
+            process.exit(0)
+        }
+        instanceCount += 1
+        client.messages.create({
+            body: options.message,
+            messagingServiceSid: MSG_SERVICE_SID,
+            to: options.target
+        }, function (err, message) {
+            if (message) {
+                console.log(message)
+            } else {
+                console.log("ERROR: " + err);
+            }
+        })
+        // loop through numbers
+        index += 1
+        index %= numbers.length
+    }
+    const launchSms = () => {
+        smsPhone();
+        setInterval(smsPhone, delay);
+    };
+    launchSms()
 }

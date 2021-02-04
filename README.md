@@ -56,7 +56,7 @@ Options:
 ```
 
 
-## Example
+## Examples
 This will send an SMS text to the target number twice with the message "I like trains"
 ```
 yarn start --target 0001112222 --numbers +9998887777 --instances 2 --action sms --message "I like trains"

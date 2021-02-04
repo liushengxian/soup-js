@@ -93,6 +93,8 @@ const smsPhone = () => {
 
 const launch = () => {
     const action = (ACTION === 'call') ? callPhone : smsPhone;
+    const output = (ACTION === 'call') ? '===TDoS Call Flooder===' : '===MDoS SMS Flooder==='
+    console.log(output)
     setInterval(action, DELAY);
 }
 launch()

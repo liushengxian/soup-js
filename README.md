@@ -56,13 +56,21 @@ Options:
 
 
 ## Examples
+This will call the target number twice and speak the text the TWILIO_TWML url points to
+```
+yarn start --target 0001112222 --numbers 9998887777 --instances 2 --action call
+```
 This will send an SMS text to the target number twice with the message "I like trains"
 ```
 yarn start --target 0001112222 --numbers 9998887777 --instances 2 --action sms --message "I like trains"
 ```
-This will call the target number twice with the text the TWILIO_TWML url points to
+This will send an MMS text to the target number with an image defined in the link
 ```
-yarn start --target 0001112222 --numbers 9998887777 --instances 2 --action call
+yarn start --target 0001112222 --numbers 9998887777 --instances 1 --action sms --imageLink https://c1.staticflickr.com/3/2899/14341091933_1e92e62d12_b.jpg
+```
+This will send an MMS text to the target number with the message "lol" and an image defined in the link
+```
+yarn start --target 0001112222 --numbers 9998887777 --instances 1 --action sms --message "lol" --imageLink https://c1.staticflickr.com/3/2899/14341091933_1e92e62d12_b.jpg
 ```
 ## Authors
 * **Ethan Wessel** - *Custom Version*

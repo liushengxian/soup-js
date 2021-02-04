@@ -29,20 +29,27 @@ if (options.action !== 'call' && options.action !== 'sms') {
     process.exit(0)
 }
 
-let MAX_INSTANCE_COUNT = options.instances !== 'unlimited' ? parseInt(options.instances) : 'unlimited'
-let ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID; //Config Here
-let AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN; //Config Here
-let TWIML_URL = process.env.TWILIO_TWIML; //Config Here
-let MSG_SERVICE_SID = process.env.MSG_SID; //Config Here
-let numbers = options.numbers;
-const delay = parseInt(options.delay);
+const ACTION = options.action
+const MAX_INSTANCE_COUNT = options.instances !== 'unlimited' ? parseInt(options.instances) : 'unlimited'
+const DELAY = parseInt(options.delay) * 1000;
+const MESSAGE = options.message;
+const TARGET = options.target;
+const NUMBERS = options.numbers;
+
+const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID; //Config Here
+const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN; //Config Here
+const TWIML_URL = process.env.TWILIO_TWIML; //Config Here
+const MSG_SERVICE_SID = process.env.MSG_SID; //Config Here
+
+console.log(ACTION, MAX_INSTANCE_COUNT, DELAY, MESSAGE, TARGET, NUMBERS)
+console.log(ACCOUNT_SID, AUTH_TOKEN, TWIML_URL, MSG_SERVICE_SID)
 
 let client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 
 let instanceCount = 0;
 let index = 0;
 
-if (options.action === 'call') {
+if (ACTION === 'call') {
     const callPhone = () => {
         if (typeof (MAX_INSTANCE_COUNT) === 'number' && instanceCount >= MAX_INSTANCE_COUNT) {
             console.log(`Terminating, max call count reached: ${MAX_INSTANCE_COUNT}`)
@@ -51,25 +58,25 @@ if (options.action === 'call') {
         instanceCount += 1
         client.calls.create({
             url: TWIML_URL,
-            to: options.target,
-            from: numbers[index++],
+            to: TARGET,
+            from: NUMBERS[index++],
             record: true
         }, function (err, call) {
             if (call) {
                 console.log("SID: " + call.sid);
-                console.log("Calling " + options.target + " from " + numbers[index]);
+                console.log("Calling " + TARGET + " from " + NUMBERS[index]);
             } else {
                 console.log("ERROR: " + err);
             }
         });
         // loop through numbers
         index += 1
-        index %= numbers.length
+        index %= NUMBERS.length
     }
 
     const launchCall = () => {
         callPhone();
-        setInterval(callPhone, delay);
+        setInterval(callPhone, DELAY);
     };
     launchCall()
 } else {
@@ -80,7 +87,7 @@ if (options.action === 'call') {
         }
         instanceCount += 1
         client.messages.create({
-            body: options.message,
+            body: MESSAGE,
             messagingServiceSid: MSG_SERVICE_SID,
             to: options.target
         }, function (err, message) {
@@ -92,11 +99,11 @@ if (options.action === 'call') {
         })
         // loop through numbers
         index += 1
-        index %= numbers.length
+        index %= NUMBERS.length
     }
     const launchSms = () => {
         smsPhone();
-        setInterval(smsPhone, delay);
+        setInterval(smsPhone, DELAY);
     };
     launchSms()
 }

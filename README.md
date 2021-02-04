@@ -45,12 +45,13 @@ $ node flood --help
 Usage: flood [options]
 
 Options:
-  -t, --target <string>     target to call
-  -a, --action <string>     call or message (default: "call")
-  -n, --numbers <items>     numbers to use
-  -i, --instances <string>  number of instances (default: "unlimited")
-  -d, --delay <string>      delay between calls/messages in seconds (default: "10")
-  -m, --message <string>    message to send for sms (default: "testing")
+  -t, --target <string>     target number where messages and media will be delivered
+  -a, --action <string>     call or sms (default: "call")
+  -n, --numbers <items>     numbers to use; comma separated
+  -i, --instances <string>  number of call/sms instances to deliver (default: "unlimited")
+  -d, --delay <string>      delay between calls/sms in seconds (default: "10")
+  -m, --message <string>    message to send for sms
+  -l, --imageLink <string>  media to send for mms (link)
   -h, --help                display help for command
 ```
 

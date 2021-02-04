@@ -14,11 +14,11 @@ function commaSeparatedList(value, dummyPrevious) {
 }
 
 program
-    .requiredOption('-t, --target <string>', 'target to call')
-    .requiredOption('-a, --action <string>', 'call or message', 'call')
-    .requiredOption('-n, --numbers <items>', 'numbers to use', commaSeparatedList)
-    .option('-i, --instances <string>', 'number of instances', 'unlimited')
-    .option('-d, --delay <string>', 'delay between calls/messages in seconds', '10')
+    .requiredOption('-t, --target <string>', 'target number where messages and media will be delivered')
+    .requiredOption('-a, --action <string>', 'call or sms', 'call')
+    .requiredOption('-n, --numbers <items>', 'numbers to use; comma separated', commaSeparatedList)
+    .option('-i, --instances <string>', 'number of call/sms instances to deliver', 'unlimited')
+    .option('-d, --delay <string>', 'delay between calls/sms in seconds', '10')
     .option('-m, --message <string>', 'message to send for sms')
     .option('-l, --imageLink <string>', 'media to send for mms (link)')
     .parse()

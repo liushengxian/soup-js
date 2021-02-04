@@ -41,9 +41,6 @@ const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN; //Config Here
 const TWIML_URL = process.env.TWILIO_TWIML; //Config Here
 const MSG_SERVICE_SID = process.env.MSG_SID; //Config Here
 
-console.log(ACTION, MAX_INSTANCE_COUNT, DELAY, MESSAGE, TARGET, NUMBERS)
-console.log(ACCOUNT_SID, AUTH_TOKEN, TWIML_URL, MSG_SERVICE_SID)
-
 let client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 
 let instanceCount = 0;

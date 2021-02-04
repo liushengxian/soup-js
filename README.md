@@ -58,11 +58,11 @@ Options:
 ## Examples
 This will send an SMS text to the target number twice with the message "I like trains"
 ```
-yarn start --target 0001112222 --numbers +9998887777 --instances 2 --action sms --message "I like trains"
+yarn start --target 0001112222 --numbers 9998887777 --instances 2 --action sms --message "I like trains"
 ```
 This will call the target number twice with the text the TWILIO_TWML url points to
 ```
-yarn start --target 9497015701 --numbers 18479433716 --instances 2 --action call
+yarn start --target 0001112222 --numbers 9998887777 --instances 2 --action call
 ```
 ## Authors
 * **Ethan Wessel** - *Custom Version*

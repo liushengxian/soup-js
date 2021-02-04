@@ -22,7 +22,6 @@ program
     .option('-m, --message <string>', 'message to send for sms', 'testing')
     .parse()
 const options = program.opts()
-console.log(options)
 
 if (options.action !== 'call' && options.action !== 'sms') {
     console.log(chalk.red(`'${options.action}' is an Invalid Action, please select: 'call' or 'sms'`))
@@ -59,10 +58,10 @@ const callPhone = () => {
         record: true
     }, function (err, call) {
         if (call) {
-            console.log("SID: " + call.sid);
-            console.log("Calling " + TARGET + " from " + NUMBERS[index]);
+            console.log(`SID: ${call.sid}`);
+            console.log(`Calling ${chalk.yellow(TARGET)} from ${chalk.yellow(NUMBERS[index])}`);
         } else {
-            console.log("ERROR: " + err);
+            console.log(`ERROR: ${err}`);
         }
     });
     // loop through numbers
@@ -81,9 +80,10 @@ const smsPhone = () => {
         to: options.target
     }, function (err, message) {
         if (message) {
-            console.log(message)
+            console.log(`SID: ${message.sid}`);
+            console.log(`Messaging ${chalk.yellow(TARGET)} from ${chalk.yellow(NUMBERS[index])}: ${chalk.green(MESSAGE)}`);
         } else {
-            console.log("ERROR: " + err);
+            console.log(`ERROR: ${err}`);
         }
     })
     // loop through numbers
@@ -92,12 +92,7 @@ const smsPhone = () => {
 }
 
 const launch = () => {
-    if (ACTION === 'call') {
-        callPhone();
-        setInterval(callPhone, DELAY);
-    } else {
-        smsPhone();
-        setInterval(smsPhone, DELAY);
-    }
+    const action = (ACTION === 'call') ? callPhone : smsPhone;
+    setInterval(action, DELAY);
 }
 launch()

@@ -19,7 +19,8 @@ program
     .requiredOption('-n, --numbers <items>', 'numbers to use', commaSeparatedList)
     .option('-i, --instances <string>', 'number of instances', 'unlimited')
     .option('-d, --delay <string>', 'delay between calls/messages in seconds', '10')
-    .option('-m, --message <string>', 'message to send for sms', 'testing')
+    .option('-m, --message <string>', 'message to send for sms')
+    .option('-l, --imageLink <string>', 'media to send for mms (link)')
     .parse()
 const options = program.opts()
 
@@ -32,6 +33,7 @@ const ACTION = options.action
 const MAX_INSTANCE_COUNT = options.instances !== 'unlimited' ? parseInt(options.instances) : 'unlimited'
 const DELAY = parseInt(options.delay) * 1000;
 const MESSAGE = options.message;
+const MEDIA = options.imageLink;
 const TARGET = options.target;
 const NUMBERS = options.numbers;
 
@@ -73,19 +75,33 @@ const smsPhone = () => {
         console.log(`Terminating, max message count reached: ${MAX_INSTANCE_COUNT}`)
         process.exit(0)
     }
+
+    const params = {}
+    params.messagingServiceSid = MSG_SERVICE_SID
+    params.to = options.target
+    if (MESSAGE && MEDIA) {
+        params.body = MESSAGE
+        params.mediaUrl = [MEDIA]
+    } else if (MESSAGE) {
+        params.body = MESSAGE
+    }
+    else {
+        params.mediaUrl = [MEDIA]
+    }
+
     instanceCount += 1
-    client.messages.create({
-        body: MESSAGE,
-        messagingServiceSid: MSG_SERVICE_SID,
-        to: options.target
-    }, function (err, message) {
-        if (message) {
-            console.log(`SID: ${message.sid}`);
-            console.log(`Messaging ${chalk.yellow(TARGET)} from ${chalk.yellow(NUMBERS[index])}: ${chalk.green(MESSAGE)}`);
-        } else {
-            console.log(`ERROR: ${err}`);
-        }
-    })
+    client.messages.create(
+        params,
+        function (err, message) {
+            if (message) {
+                console.log(`SID: ${message.sid}`);
+                console.log(`Messaging ${chalk.yellow(TARGET)} from ${chalk.yellow(NUMBERS[index])}`)
+                if (MESSAGE) console.log(`message: ${chalk.green(MESSAGE)}`)
+                if (MEDIA) console.log(`media: ${chalk.green(MEDIA)}`)
+            } else {
+                console.log(`ERROR: ${err} `);
+            }
+        })
     // loop through numbers
     index += 1
     index %= NUMBERS.length

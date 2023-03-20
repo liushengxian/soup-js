@@ -4,7 +4,6 @@
   "description": "open source call flooder using Twilio API.",
   "main": "flood.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node flood"
   },
   "repository": {
@@ -23,6 +22,9 @@
   },
   "homepage": "https://github.com/liushengxian/soup-js#readme",
   "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^7.0.0",
+    "dotenv": "^8.2.0",
     "twilio": "^3.4.0"
   }
 }
